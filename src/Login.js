@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "./Login.css";
 const Login = () => {
 
-const navigate = useNavigate();
 
 
   const [email, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -21,9 +21,9 @@ const navigate = useNavigate();
 
       console.log(users)
       if (matchedUser) {
-        alert('Login successful!');
         navigate('/dashboard');
-
+        alert('Login successful!');
+        
       } else {
         alert('Invalid email or password');
       }
@@ -50,7 +50,10 @@ const navigate = useNavigate();
         onChange={(e) => setPassword(e.target.value)}
       />
       <button className="login-button" onClick={handleLogin}>Login</button>
+    
+    <p>Don't have an account sign up <Link to="/register" >here</Link></p>
     </div>
+
   );
 };
 

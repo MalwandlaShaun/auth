@@ -1,9 +1,9 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+//import { useAuth } from './AuthContext';
 
 const PrivateRoute = ({ Dashboard, ...rest }) => {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = true
 
   return (
     <>
