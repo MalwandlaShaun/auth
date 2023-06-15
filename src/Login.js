@@ -1,36 +1,14 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import "./Login.css";
-const Login = () => {
+//import React, { useState } from 'react';
+import { Link, } from 'react-router-dom';
+//import axios from 'axios';
+import "./Login.css"; 
+
+const Login = ({data}) => {
+
+const {email,setUsername, password, setPassword, handleLogin} = data
 
 
-
-  const [email, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-
-  const handleLogin = async () => {
-    try {
-      const response = await axios.get('http://localhost:8000/users');
-      const users = response.data;
-
-      const matchedUser = users.find(
-        (user) => user.email === email && user.password === password 
-      );
-
-      console.log(users)
-      if (matchedUser) {
-        navigate('/dashboard');
-        alert('Login successful!');
-        
-      } else {
-        alert('Invalid email or password');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+  //const navigate = useNavigate();
 
   return (
     <div className="login-container">

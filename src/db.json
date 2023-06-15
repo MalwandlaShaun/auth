@@ -24,6 +24,26 @@
       "email": "malwandla@gmail.com",
       "password": "malwandla",
       "id": 5
+    },
+    {
+      "email": "chantell@gmail.com",
+      "password": "chantell",
+      "id": 6
+    },
+    {
+      "email": "ziggy@gmail.com",
+      "password": "ziggy",
+      "id": 7
+    },
+    {
+      "email": "momo@gmail.com",
+      "password": "momo",
+      "id": 8
+    },
+    {
+      "email": "melo@gmail.com",
+      "password": "melo",
+      "id": 9
     }
   ]
 }
