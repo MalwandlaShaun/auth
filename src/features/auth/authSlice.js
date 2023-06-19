@@ -10,7 +10,7 @@ const initialState = {
 
 export const login = createAsyncThunk('auth/login', async (_, thunkAPI) => {
   const { email, password } = thunkAPI.getState().auth;
-
+ 
   console.log(thunkAPI.getState())
   try {
     const response = await axios.get('http://localhost:8000/users');
@@ -23,6 +23,32 @@ export const login = createAsyncThunk('auth/login', async (_, thunkAPI) => {
     } else {
       return { success: false };
     }
+  } catch (error) {
+    return thunkAPI.rejectWithValue('Something went wrong');
+  }
+});
+
+export const register = createAsyncThunk('auth/register', async (_, thunkAPI) => {
+  const { email, password } = thunkAPI.getState().auth;
+
+  console.log(thunkAPI.getState());
+  try {
+    const response = await axios.get('http://localhost:8000/users');
+    const existingUsers = response.data;
+
+    // Check if email already exists
+    const userExists = existingUsers.some(user => user.email === email);
+    if (userExists) {
+      return { success: false, error: 'Registration failed: Email already exists' };
+    }
+
+    // If email doesn't exist, proceed with registration
+    await axios.post('http://localhost:8000/users', {
+      email,
+      password,
+    });
+
+    return { success: true };
   } catch (error) {
     return thunkAPI.rejectWithValue('Something went wrong');
   }
@@ -51,6 +77,15 @@ const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(register.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
       });
   },

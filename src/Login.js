@@ -26,7 +26,7 @@ useEffect(() => {
 const handleLogin = () => {
   
   dispatch(login())
-    .then((result) => {
+    .then((result) => { 
       if (result.payload.success) {
         alert('Login successful!');
         navigate('/dashboard');

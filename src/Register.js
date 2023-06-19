@@ -1,41 +1,41 @@
 
 import { useNavigate, Link } from 'react-router-dom';
 
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { register } from './features/auth/authSlice';
+import { setPassword,setUsername } from './features/auth/authSlice';
+
 
 const Register = () => {
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const { email, password } = useSelector((state) => state.auth);
+const state = useSelector((state) => state.auth);
+console.log(state)
+const dispatch = useDispatch();
+const navigate = useNavigate();
 
-  const handleRegister = async () => {
-    try {
-      const response = await axios.get('http://localhost:8000/users');
-      const existingUsers = response.data;
+useEffect(() => {
+  // Perform any necessary side effects here when email or password changes
+}, [email, password]);
+
+const handleRegister = () => {
   
-      // Check if email already exists
-      const userExists = existingUsers.some(user => user.email === email);
-      if (userExists) {
+  dispatch(register())
+    .then((result) => { 
+      if (result.payload.success) {
+        alert('Registration successful!');
+    navigate('/login');
+        
+      } else {
         alert('Registration failed: Email already exists');
-        return;
       }
-  
-      // If email doesn't exist, proceed with registration
-      await axios.post('http://localhost:8000/users', {
-        email,
-        password,
-      });
-  
-      alert('Registration successful!');
-      navigate('/login');
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Registration failed');
-    }
-  };
-
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
   return (
     <div className='login-container'> 
       <h1>Register</h1>
@@ -44,16 +44,16 @@ const Register = () => {
         placeholder="Email"
         className='input-field'
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) =>dispatch(setUsername(e.target.value))}
       />
       <input
         type="password"
         placeholder="Password"
         className='input-field'
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => dispatch(setPassword(e.target.value))}
       />
-      <button className='login-button' onClick={handleRegister}>Register</button>
+      <button className='login-button' onClick={() => handleRegister()}>Register</button>
       <p>Already have an account sign in <Link to="/login" >here</Link></p>
     </div>
   );
