@@ -12,14 +12,22 @@ const Register = () => {
 
   const handleRegister = async () => {
     try {
-      
-      const response = await axios.post('http://localhost:8000/users', {
+      const response = await axios.get('http://localhost:8000/users');
+      const existingUsers = response.data;
+  
+      // Check if email already exists
+      const userExists = existingUsers.some(user => user.email === email);
+      if (userExists) {
+        alert('Registration failed: Email already exists');
+        return;
+      }
+  
+      // If email doesn't exist, proceed with registration
+      await axios.post('http://localhost:8000/users', {
         email,
         password,
       });
-
-      
-      console.log(response.data);
+  
       alert('Registration successful!');
       navigate('/login');
     } catch (error) {

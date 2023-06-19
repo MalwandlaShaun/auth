@@ -1,28 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+//import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const PrivateRoute = ({ data}) => {
 
-const {email, password, Dashboard} = data
-const navigate = useNavigate()
+const { Dashboard} = data
+//const navigate = useNavigate()
+const { isAuthenticated } = useSelector((state)=> state.auth)
+// useEffect(() => {
 
-const isAuthenticated = async () => {
-  try {
-    const response = await axios.get('http://localhost:8000/users');
-    const users = response.data;
+//   isAuthenticated();
+// }, []);
 
-    const matchedUser = users.find(
-      (user) => user.email === email && user.password === password 
-    );
 
-    if(!matchedUser){
-    return navigate("/login")
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
+// const isAuthenticated = async () => {
+//   try {
+//     const response = await axios.get('http://localhost:8000/users');
+//     const users = response.data;
+
+//     const matchedUser = users.find(
+//       (user) => user.email === email && user.password === password 
+//     );
+
+//     if(!matchedUser){
+//     return navigate("/login")
+//     }
+//   } catch (error) {
+//     console.error('Error:', error);
+//   }
+// };
 
 // useEffect(()=>{
 // isAuthenticated()
@@ -39,7 +46,7 @@ const isAuthenticated = async () => {
 
   return (
     <>
-    {isAuthenticated() ? <Dashboard /> : <Navigate to="/login" replace />}
+    {isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />}
     </>
 );
 };

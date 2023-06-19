@@ -1,59 +1,46 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
 
 const initialState = {
-  email: "",
-  password: "",
+  email: '',
+  password: '',
+  isLoading: true,
+  isAuthenticated: false,
 };
 
-export const login = createAsyncThunk(
-  'auth/',
-  async (name, thunkAPI) => {
-const navigate = useNavigate();
+export const login = createAsyncThunk('auth/login', async (_, thunkAPI) => {
+  const { email, password } = thunkAPI.getState().auth;
 
-    try {
-        const response = await axios.get('http://localhost:8000/users');
-        const users = response.data;
-    
-        const matchedUser = users.find(
-          (user) => user.email === initialState.email && user.password === initialState.password 
-        );
-    
-        console.log(users)
-        if (matchedUser) {
-          
-          alert('Login successful!');
-          navigate('/dashboard');
-        } else {
-          alert('Invalid email or password');
-        }
-    
-    } catch (error) {
-      return thunkAPI.rejectWithValue('something went wrong');
+  console.log(thunkAPI.getState())
+  try {
+    const response = await axios.get('http://localhost:8000/users');
+    const users = response.data;
+
+    const matchedUser = users.find((user) => user.email === email && user.password === password);
+
+    if (matchedUser) {
+      return { success: true };
+    } else {
+      return { success: false };
     }
+  } catch (error) {
+    return thunkAPI.rejectWithValue('Something went wrong');
   }
-);
-
-
-
-
+});
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-   authSlice: (state, action) => {
-      const target = action.payload;
-      state.email = target;
+    setUsername: (state, action) => {
+      state.email = action.payload;
     },
-
-    setpassword: (state, action) => {
-        state.password = action.payload;
+    setPassword: (state, action) => {
+      state.password = action.payload;
     },
-
-   
+    setAuth: (state) => {
+      state.isAuthenticated = true;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -61,19 +48,14 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
-       
         state.isLoading = false;
-        state.cartItems = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
-        console.log(action);
         state.isLoading = false;
       });
   },
 });
 
-// console.log(authSlice);
-export const { setpassword, setUsername } =
-  authSlice.actions;
+export const { setPassword, setUsername, setAuth } = authSlice.actions;
 
 export default authSlice.reducer;

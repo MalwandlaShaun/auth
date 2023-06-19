@@ -44,6 +44,31 @@
       "email": "melo@gmail.com",
       "password": "melo",
       "id": 9
+    },
+    {
+      "email": "",
+      "password": "hello",
+      "id": 10
+    },
+    {
+      "email": "chantell@gmail.com",
+      "password": "chantell",
+      "id": 11
+    },
+    {
+      "email": "hi",
+      "password": "hello",
+      "id": 12
+    },
+    {
+      "email": "go",
+      "password": "hu",
+      "id": 13
+    },
+    {
+      "email": "malwandla@gmail.com",
+      "password": "malwandla",
+      "id": 14
     }
   ]
 }
