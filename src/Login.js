@@ -5,6 +5,7 @@ import "./Login.css";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { login } from './features/auth/authSlice';
+
 const Login = ({data}) => {
 
 //const {email,setUsername, password, setPassword, handleLogin} = data
@@ -21,14 +22,14 @@ const { email, password, setPassword, setUsername } = useSelector((store) => sto
         placeholder="email"
         className="input-field"
         value={email}
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={(e) => dispatch(setUsername(e.target.value))}
       />
       <input
         type="password"
         placeholder="Password"
         className="input-field"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => dispatch(setPassword(e.target.value))}
       />
       <button className="login-button" onClick={()=> {
             dispatch(login());
