@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import List from "./List";
 import Alert from "./Alert";
 import axios from "axios";
 import "./index.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setName, setAlert, setIsEditing, setList, setEditID } from "../features/todolist/todolistSlice";
 
 const App = () => {
-  const [name, setName] = useState("");
-  const [list, setList] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editID, setEditID] = useState(null);
-  const [alert, setAlert] = useState({ show: false, msg: "", type: "" });
+const { name, list, isEditing, alert, editID } = useSelector((state) => state.todolist )
+  const dispatch = useDispatch()
 
-  useEffect(() => {
+console.log("your data: " + name + " " + list)
+useEffect(() => {
     getList();
   }, []);
 
@@ -22,7 +22,7 @@ const App = () => {
   const getList = async () => {
     try {
       const response = await axios.get("http://localhost:4000/list");
-      setList(response.data);
+      dispatch(setList(response.data));
       console.log(response.data)
     } catch (error) {
       console.log("Error fetching list:", error);
@@ -45,32 +45,32 @@ const App = () => {
     if (!name) {
       showAlert(true, "Please enter a value", "danger");
     } else if (name && isEditing) {
-      setList(
+      dispatch(setList(
         list.map((item) => {
           if (item.id === editID) {
             return { ...item, title: name };
           }
           return item;
         })
-      );
+      ));
       showAlert(true, "Item changed", "success");
     } else {
       showAlert(true, "Item added", "success");
       const newItem = { id: new Date().getTime().toString(), title: name };
-      setList([...list, newItem]);
+      dispatch(setList([...list, newItem]));
     }
-    setName("");
-    setEditID(null);
-    setIsEditing(false);
+    dispatch(setName(""));
+    dispatch(setEditID(null));
+    dispatch(setIsEditing(false));
   };
 
   const showAlert = (show = false, msg = "", type = "") => {
-    setAlert({ show, msg, type });
+    dispatch(setAlert({ show, msg, type }));
   };
 
   const clearItems = () => {
     showAlert(true, "Empty list", "danger");
-    setList([]);
+    dispatch(setList([]));
   };
 
   const removeAlert = () => {
@@ -78,10 +78,10 @@ const App = () => {
   };
 
   const editItem = (id) => {
-    setIsEditing(true);
+    dispatch(setIsEditing(true));
     const edit = list.find((item) => item.id === id);
-    setName(edit.title);
-    setEditID(id);
+    dispatch(setName(edit.title));
+    dispatch(setEditID(id));
   };
 
   const removeItem = (id) => {
@@ -89,7 +89,7 @@ const App = () => {
     const newItems = list.filter((item) => {
       return item.id !== id;
     });
-    setList(newItems);
+    dispatch(setList(newItems));
   };
 
   return (
@@ -103,7 +103,7 @@ const App = () => {
             placeholder="e.g. eggs"
             className="grocery"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => dispatch(setName(e.target.value))}
           ></input>
           <button type="submit" className="submit-btn">
             {isEditing ? "Edit" : "Submit"}
